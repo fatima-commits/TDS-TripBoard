@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iniciar sesión · TripBoard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="auth">
+  <form class="card" id="auth-form">
+    <div class="logo"><i></i>TripBoard</div>
+    <p style="margin:0;color:var(--mute)">Destinos, días y presupuesto en un solo tablero.</p>
+    <div class="tg">
+      <button type="button" class="chip" id="auth-tab-login" aria-pressed="true">Iniciar sesión</button>
+      <button type="button" class="chip" id="auth-tab-register" aria-pressed="false">Crear cuenta</button>
+    </div>
+    <label id="auth-name-field" hidden>Nombre<input id="auth-name" name="name" autocomplete="name"></label>
+    <label>Correo<input id="auth-email" name="email" type="email" required autocomplete="email"></label>
+    <label>Contraseña<input id="auth-password" name="password" type="password" required minlength="6" autocomplete="current-password"></label>
+    <p class="error" id="auth-error" role="alert" hidden></p>
+    <button class="btn sun" id="auth-submit" type="submit">Entrar a mis viajes</button>
+  </form>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>
