@@ -74,7 +74,9 @@ function normalizeTrip(t) {
   return {
     _id: t._id,
     name: t.name,
-    destination: t.destination,
+    // El backend guarda city y country por separado.
+    destination: [t.city, t.country].filter(Boolean).join(", "),
+    gradient: t.gradient ?? 0,
     budget: t.budget,
     days: t.days.length,
     activities,
@@ -148,15 +150,26 @@ const api = {
     return request(path, { method: "PATCH", body: { isFavorite } });
   },
 
-  // Se calcula en el cliente a partir de la lista de viajes (no hay endpoint propio).
+  // Destinos y actividades favoritos: se calculan en el cliente a partir de
+  // la lista de viajes (isFavorite vive dentro de cada viaje).
   async listFavorites() {
     const trips = await api.listTrips();
     const favorites = { destinations: [], activities: [] };
     for (const t of trips) {
-      const trip = { _id: t._id, name: t.name, destination: t.destination };
+      const trip = { _id: t._id, name: t.name, destination: t.destination, gradient: t.gradient };
       t.destinations.filter(d => d.favorite).forEach(d => favorites.destinations.push({ ...d, trip }));
       t.activities.filter(a => a.favorite).forEach(a => favorites.activities.push({ ...a, trip }));
     }
     return favorites;
-  }
+  },
+
+  // --- Viajes favoritos (colección Favorite: /api/favorites) ---------------
+  async listFavoriteTrips() {
+    const { favorites } = await request("/favorites");
+    return favorites.map(f => ({ ...normalizeTrip(f.tripId), favoritedAt: f.createdAt }));
+  },
+
+  addFavoriteTrip: tripId => request(`/favorites/${tripId}`, { method: "POST" }),
+
+  removeFavoriteTrip: tripId => request(`/favorites/${tripId}`, { method: "DELETE" })
 };

@@ -1,3 +1,8 @@
+/* ==========================================================
+   TripBoard · Trips + Trip — same palette & fonts as auth pages
+   Token NAMES are unchanged (JS/inline styles may use them);
+   only their values now follow styles.css.
+   ========================================================== */
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
   /* auth palette */
   --night:#0c2233;--lagoon:#1f6f78;--glass:#8fe0d0;--sun:#ffc857;
@@ -182,10 +187,19 @@ small.hint{font-weight:400;color:var(--mute)}
 /* ---------- Favoritos ---------- */
 .fav-section+.fav-section{margin-top:12px}
 .sect{display:flex;align-items:baseline;gap:.6rem}
-.sect small:not(:empty){display:inline-grid;place-items:center;min-width:1.6rem;height:1.6rem;padding:0 .45rem;border-radius:999px;background:var(--card);border:1.5px solid var(--line);color:var(--accent);font:600 .8rem "Instrument Sans",system-ui,sans-serif;letter-spacing:0}
 .sect:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--sun);align-self:center}
-a.dest,a.act{display:block;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
-a.dest:hover,a.act:hover{transform:translateY(-3px);box-shadow:var(--card-shadow)}
+.sect small:not(:empty){display:inline-grid;place-items:center;min-width:1.6rem;height:1.6rem;padding:0 .45rem;border-radius:999px;background:var(--card);border:1.5px solid var(--line);color:var(--accent);font:600 .8rem "Instrument Sans",system-ui,sans-serif;letter-spacing:0}
+/* Whole card is clickable via the stretched link; the ♥ stays on top */
+.fav-card{position:relative;transition:transform .15s,box-shadow .15s}
+.fav-card:hover{transform:translateY(-3px);box-shadow:var(--card-shadow)}
+.fav-card a.stretch{color:inherit;text-decoration:none}
+.fav-card a.stretch:after{content:"";position:absolute;inset:0;z-index:1}
+.fav-card .ib{position:relative;z-index:2}
+.ticket.fav-card .tk-top{position:static}
+.ticket.fav-card .tk-top .ib{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.92);border-color:transparent}
 .grid>.act{margin:0}
 .grid>.act .bt{margin-top:10px}
-@media (prefers-reduced-motion:reduce){a.dest,a.act{transition:none}}
+/* Trip page: favorite toggle */
+.top .actions{flex-wrap:wrap}
+.fav-toggle[aria-pressed=true]{color:var(--pink);border-color:var(--pink)}
+@media (prefers-reduced-motion:reduce){.fav-card{transition:none}}

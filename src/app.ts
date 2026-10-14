@@ -7,6 +7,7 @@ import { adminRouter, userRouter } from './routes/users.routes.js';
 import { errorHandler, notFound } from './middleware/error.middleware.js';
 import { healthRouter } from './routes/health.routes.js';
 import { tripRoutes } from './routes/trips.routes.js';
+import { favoriteRouter } from './routes/favorites.routes.js';
 
 const publicFolder = process.env.NODE_ENV === 'production' ? 'dist/public' : 'src/public';
 const publicDirectory = path.join(process.cwd(), publicFolder);
@@ -19,7 +20,7 @@ app.use(cookieParser());
 app.use(healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/trips', tripRoutes);
-//app.use('/api/favorites', favoriteRouter);
+app.use('/api/favorites', favoriteRouter);
 app.use('/api/users', userRouter);
 app.use('/api/admin', adminRouter);
 

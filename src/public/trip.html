@@ -21,7 +21,10 @@
   <a class="back" id="btn-back" href="trips.html" style="display:inline-block;color:var(--mute);text-decoration:none">‹ Todos los viajes</a>
   <div class="top">
     <div><h2 id="trip-name">Cargando…</h2><p id="trip-meta"></p></div>
-    <button class="btn ghost" id="btn-delete-trip">Eliminar viaje</button>
+    <div class="actions">
+      <button class="btn ghost fav-toggle" id="btn-favorite-trip" aria-pressed="false" hidden>♡ Agregar a favoritos</button>
+      <button class="btn ghost" id="btn-delete-trip">Eliminar viaje</button>
+    </div>
   </div>
   <div class="stats">
     <div class="stat"><b id="stat-budget"></b><small>Presupuesto</small></div>
@@ -64,6 +67,7 @@
 </dialog>
 <div class="toast" id="toast" hidden></div>
 <script src="js/api.js"></script>
+<script src="js/trip-favorite.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/trip.js"></script>
 </body>

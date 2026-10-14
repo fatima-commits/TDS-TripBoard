@@ -22,6 +22,12 @@
     <div><h2 id="favorites-title">Favoritos</h2><p id="favorites-subtitle">Lo que no quieres perderte.</p></div>
   </div>
 
+  <section class="fav-section" aria-labelledby="favorite-trips-title">
+    <h3 class="sect" id="favorite-trips-title">Viajes <small id="favorite-trips-count"></small></h3>
+    <div class="empty" id="favorite-trips-empty" hidden>Abre un viaje y toca “♡ Agregar a favoritos” para guardarlo aquí.</div>
+    <div class="tickets" id="favorite-trips-list"></div>
+  </section>
+
   <section class="fav-section" aria-labelledby="favorite-destinations-title">
     <h3 class="sect" id="favorite-destinations-title">Destinos <small id="favorite-destinations-count"></small></h3>
     <div class="empty" id="favorite-destinations-empty" hidden>Marca un destino con ♥ y aparecerá aquí.</div>
@@ -33,27 +39,6 @@
     <div class="empty" id="favorite-activities-empty" hidden>Marca una actividad con ♥ y aparecerá aquí.</div>
     <div class="grid" id="favorite-activities-list"></div>
   </section>
-
-  <!--
-    Plantillas para favorites.js (mismas clases que trip.html):
-
-    Destino → dentro de #favorite-destinations-list
-      <a class="dest" href="trip.html?id=TRIP_ID">
-        <div class="im" style="background:GRADIENTE">Nombre del destino
-          <button class="ib" aria-pressed="true" aria-label="Quitar de favoritos">♥</button>
-        </div>
-        <div>Nombre del viaje</div>
-      </a>
-
-    Actividad → dentro de #favorite-activities-list
-      <a class="act" href="trip.html?id=TRIP_ID" style="--c:COLOR_CATEGORIA">
-        <small>Nombre del viaje · Categoría</small>
-        <b>Título de la actividad</b>
-        <div class="bt"><span>$25</span>
-          <button class="ib" aria-pressed="true" aria-label="Quitar de favoritos">♥</button>
-        </div>
-      </a>
-  -->
 </main>
 <div class="toast" id="toast" hidden></div>
 <script src="js/api.js"></script>
