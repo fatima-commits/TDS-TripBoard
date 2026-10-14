@@ -1,2 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.tripRoutes = void 0;
+const express_1 = require("express");
+const trips_controller_1 = require("../controllers/trips.controller");
+exports.tripRoutes = (0, express_1.Router)();
+exports.tripRoutes.post('/', trips_controller_1.createTrip);
+exports.tripRoutes.delete('/:id', trips_controller_1.deleteTrip);
+exports.tripRoutes.post('/:id/days/:day/activities', trips_controller_1.addActivity);
+exports.tripRoutes.patch('/:id/activities/:activityId', trips_controller_1.updateActivity);
+exports.tripRoutes.delete('/:id/activities/:activityId', trips_controller_1.deleteActivity);
+exports.tripRoutes.post('/:id/destinations', trips_controller_1.addDestination);
+exports.tripRoutes.patch('/:id/destinations/:destinationId', trips_controller_1.updateDestination);

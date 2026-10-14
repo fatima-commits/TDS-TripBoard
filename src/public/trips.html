@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mis viajes · TripBoard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="./css/stylesTrips.css">
+</head>
+<body>
+<header>
+  <a class="logo" href="trips.html"><i></i>TripBoard</a>
+  <nav aria-label="Principal">
+    <a id="nav-trips" href="trips.html">My Travels</a>
+    <a id="nav-favorites" href="favorites.html">Favorites <span id="favorites-count"></span></a>
+  </nav>
+  <span id="user-name"></span>
+  <button class="btn ghost" id="btn-logout">Log Out</button>
+</header>
+<main>
+  <div class="top">
+    <div><h2 id="trips-title">Mis viajes</h2><p id="trips-count"></p></div>
+    <button class="btn sun" id="btn-new-trip">+ Nuevo viaje</button>
+  </div>
+  <div class="empty" id="trips-empty" hidden>Aún no tienes viajes. Crea el primero para empezar a planear.</div>
+  <div class="tickets" id="trips-list"></div>
+</main>
+<dialog id="dialog-trip">
+  <form class="dlg" id="trip-form">
+    <h3>Nuevo viaje</h3>
+    <label>Nombre<input id="trip-name" name="name" required placeholder="Ej. Escapada a Oaxaca"></label>
+    <label>Destino principal<input id="trip-destination" name="destination" placeholder="Ej. Oaxaca, México"></label>
+    <div class="two">
+      <label>Días<input id="trip-days" name="days" type="number" min="1" max="14" value="3"></label>
+      <label>Presupuesto (USD)<input id="trip-budget" name="budget" type="number" min="0" value="800"></label>
+    </div>
+    <div class="actions"><button type="button" class="btn ghost" id="btn-trip-cancel" data-close>Cancelar</button><button class="btn sun" id="btn-trip-save" type="submit">Crear viaje</button></div>
+  </form>
+</dialog>
+<div class="toast" id="toast" hidden></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/trips.js"></script>
+</body>
+</html>

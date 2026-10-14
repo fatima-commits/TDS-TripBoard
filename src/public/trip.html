@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viaje · TripBoard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="./css/stylesTrips.css">
+</head>
+<body>
+<header>
+  <a class="logo" href="trips.html"><i></i>TripBoard</a>
+  <nav aria-label="Principal">
+    <a id="nav-trips" href="trips.html">Mis viajes</a>
+    <a id="nav-favorites" href="favorites.html">Favoritos <span id="favorites-count"></span></a>
+  </nav>
+  <span id="user-name"></span>
+  <button class="btn ghost" id="btn-logout">Cerrar sesión</button>
+</header>
+<main>
+  <a class="back" id="btn-back" href="trips.html" style="display:inline-block;color:var(--mute);text-decoration:none">‹ Todos los viajes</a>
+  <div class="top">
+    <div><h2 id="trip-name">Cargando…</h2><p id="trip-meta"></p></div>
+    <button class="btn ghost" id="btn-delete-trip">Eliminar viaje</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="stat-budget"></b><small>Presupuesto</small></div>
+    <div class="stat"><b id="stat-spent"></b><small>Gastado</small></div>
+    <div class="stat"><b id="stat-left"></b><small id="stat-left-label">Disponible</small></div>
+    <div class="stat"><b id="stat-activities"></b><small>Actividades</small></div>
+  </div>
+  <div class="tabs" role="group" aria-label="Secciones">
+    <button class="chip" id="tab-itinerary" aria-pressed="true">Itinerario</button>
+    <button class="chip" id="tab-destinations" aria-pressed="false">Destinos</button>
+    <button class="chip" id="tab-budget" aria-pressed="false">Presupuesto</button>
+  </div>
+  <section id="panel-itinerary"><div class="board" id="days-board"></div></section>
+  <section id="panel-destinations" hidden>
+    <div class="actions" style="justify-content:flex-start;margin-bottom:14px"><button class="btn sun" id="btn-add-destination">+ Agregar destino</button></div>
+    <div class="empty" id="destinations-empty" hidden>Este viaje aún no tiene destinos.</div>
+    <div class="grid" id="destinations-list"></div>
+  </section>
+  <section id="panel-budget" hidden><div class="panel" id="budget-breakdown"></div></section>
+</main>
+<dialog id="dialog-activity">
+  <form class="dlg" id="activity-form">
+    <h3>Nueva actividad</h3>
+    <input type="hidden" id="activity-day" name="day">
+    <label>Actividad<input id="activity-title" name="title" required placeholder="Ej. Cena en el mercado"></label>
+    <div class="two">
+      <label>Hora<input id="activity-time" name="time" type="time" value="10:00"></label>
+      <label>Costo (USD)<input id="activity-cost" name="cost" type="number" min="0" value="20"></label>
+    </div>
+    <label>Categoría<select id="activity-category" name="category"><option>Comida</option><option>Cultura</option><option>Transporte</option><option>Hospedaje</option><option>Aventura</option></select></label>
+    <div class="actions"><button type="button" class="btn ghost" id="btn-activity-cancel" data-close>Cancelar</button><button class="btn sun" id="btn-activity-save" type="submit">Guardar actividad</button></div>
+  </form>
+</dialog>
+<dialog id="dialog-destination">
+  <form class="dlg" id="destination-form">
+    <h3>Nuevo destino</h3>
+    <label>Nombre<input id="destination-name" name="name" required placeholder="Ej. Hierve el Agua"></label>
+    <div class="actions"><button type="button" class="btn ghost" id="btn-destination-cancel" data-close>Cancelar</button><button class="btn sun" id="btn-destination-save" type="submit">Guardar destino</button></div>
+  </form>
+</dialog>
+<div class="toast" id="toast" hidden></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/trip.js"></script>
+</body>
+</html>

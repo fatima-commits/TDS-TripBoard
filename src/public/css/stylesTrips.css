@@ -1,0 +1,185 @@
+/* ==========================================================
+   TripBoard · Trips + Trip — same palette & fonts as auth pages
+   Token NAMES are unchanged (JS/inline styles may use them);
+   only their values now follow styles.css.
+   ========================================================== */
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  /* auth palette */
+  --night:#0c2233;--lagoon:#1f6f78;--glass:#8fe0d0;--sun:#ffc857;
+  /* app tokens (same names as before) */
+  --bg:#e9f0ef;--card:#FFFFFF;--ink:#0c2233;--mute:#587079;--line:#c9d6d9;--line-hover:#9fb3b9;
+  --field:#f5f8f8;--field-focus:#ffffff;--accent:#1f6f78;--ring:rgba(31,111,120,.18);
+  --pink:#e5604f;--sky:#1f6f78;--on:#fff;
+  --btn-glow:rgba(31,111,120,.7);
+  --card-shadow:0 1px 0 rgba(12,34,51,.04),0 24px 48px -24px rgba(12,34,51,.35);
+  --soft-shadow:0 1px 0 rgba(12,34,51,.04),0 12px 24px -18px rgba(12,34,51,.35);
+  --hero:
+    radial-gradient(55% 140% at 12% 120%,rgba(255,200,87,.45),transparent 70%),
+    radial-gradient(60% 160% at 100% 0%,rgba(31,111,120,.95),transparent 70%),
+    #0c2233}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c2233;--card:#12304a;--ink:#eaf4f3;--mute:#9db6bd;--line:#2f5169;--line-hover:#4d7490;--field:#0c2233;--field-focus:#0f2a3f;--accent:#8fe0d0;--ring:rgba(143,224,208,.22);--sky:#8fe0d0;--pink:#ff9b92;--btn-glow:rgba(143,224,208,.45);--card-shadow:0 1px 0 rgba(255,255,255,.04),0 24px 48px -24px rgba(0,0,0,.6);--soft-shadow:0 12px 24px -18px rgba(0,0,0,.6)}}
+:root[data-theme="dark"]{--bg:#0c2233;--card:#12304a;--ink:#eaf4f3;--mute:#9db6bd;--line:#2f5169;--line-hover:#4d7490;--field:#0c2233;--field-focus:#0f2a3f;--accent:#8fe0d0;--ring:rgba(143,224,208,.22);--sky:#8fe0d0;--pink:#ff9b92;--btn-glow:rgba(143,224,208,.45);--card-shadow:0 1px 0 rgba(255,255,255,.04),0 24px 48px -24px rgba(0,0,0,.6);--soft-shadow:0 12px 24px -18px rgba(0,0,0,.6)}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Instrument Sans","Avenir Next","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;margin:0;letter-spacing:-.025em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+/* ---------- Header (same night/lagoon/sun look as the auth intro) ---------- */
+header{position:relative;overflow:hidden;display:flex;align-items:center;gap:20px;padding:16px clamp(16px,4vw,40px);background:var(--hero);color:#fff;flex-wrap:wrap}
+header:before{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M-10 100 C 260 20, 520 120, 760 50 S 1100 10, 1220 30' fill='none' stroke='rgba(143,224,208,0.4)' stroke-width='2' stroke-dasharray='3 11' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+header>*{position:relative}
+.logo{font:800 1.45rem "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.02em;display:flex;align-items:center;gap:.6rem;margin-right:auto}
+.logo i{width:.85rem;height:.85rem;border-radius:50%;background:var(--sun);box-shadow:0 0 0 4px rgba(255,200,87,.3);display:block}
+header nav{display:flex;gap:4px}
+header nav button{background:none;border:0;padding:8px 14px;border-radius:999px;color:rgba(234,244,243,.78)}
+header nav button[aria-current=true]{background:rgba(12,34,51,.35);color:var(--glass);font-weight:600;box-shadow:inset 0 0 0 1px rgba(143,224,208,.35)}
+#user-name{color:rgba(234,244,243,.78);font-size:.95rem}
+header .btn.ghost{color:#fff;border-color:rgba(143,224,208,.35);background:rgba(12,34,51,.25)}
+header .btn.ghost:hover{border-color:var(--glass);color:var(--glass);background:rgba(12,34,51,.4);box-shadow:none}
+
+/* ---------- Layout ---------- */
+main{padding:32px clamp(16px,4vw,40px) 64px;max-width:1280px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.top h2{font-size:clamp(2rem,4vw,2.6rem);font-weight:800;line-height:1.05;letter-spacing:-.035em}
+.top p{margin:6px 0 0;color:var(--mute)}
+
+/* ---------- Buttons (match .auth-submit) ---------- */
+.btn{background:var(--night);color:#fff;border:0;border-radius:.8rem;padding:.75rem 1.2rem;font-weight:600;letter-spacing:.01em;transition:background .15s,transform .15s,box-shadow .15s,border-color .15s,color .15s}
+.btn:hover{background:var(--lagoon);box-shadow:0 10px 20px -10px var(--btn-glow)}
+.btn:active{transform:translateY(1px)}
+.btn.sun{background:var(--sun);color:var(--night)}
+.btn.sun:hover{background:#ffd77f;box-shadow:0 10px 20px -10px rgba(255,200,87,.55)}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--line-hover);background:var(--card);box-shadow:none}
+.back{background:none;border:0;color:var(--mute);padding:0;margin-bottom:12px;font-weight:500}
+.back:hover{color:var(--accent)!important}
+
+/* ---------- Trip tickets (boarding passes) ---------- */
+.tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.ticket{background:var(--card);border-radius:1.5rem;border:0;overflow:hidden;text-align:left;padding:0;display:block;width:100%;box-shadow:var(--card-shadow);transition:transform .15s,box-shadow .15s}
+.ticket:hover{transform:translateY(-4px);box-shadow:0 1px 0 rgba(12,34,51,.04),0 30px 50px -24px rgba(12,34,51,.45)}
+.tk-top{height:130px;padding:18px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;position:relative}
+.tk-top h3{font-size:1.65rem;font-weight:800;letter-spacing:-.03em}.tk-top span{font-size:14px;opacity:.9}
+.tk-top:after{content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.16)}
+.tk-mid{border-top:2px dashed var(--line);margin:0 -1px;position:relative;padding:16px 18px 18px}
+.tk-mid:before,.tk-mid:after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg)}
+.tk-mid:before{left:-10px}.tk-mid:after{right:-10px}
+.row2{display:flex;justify-content:space-between;font-size:14px;color:var(--mute)}
+.meter{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin:8px 0}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:9px}
+.meter.over i{background:var(--pink)}
+.new{border:2px dashed var(--line);border-radius:1.5rem;min-height:240px;background:none;display:grid;place-items:center;color:var(--mute);font-weight:600;transition:border-color .15s,color .15s}
+.new:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- Tabs / chips (pill like the auth eyebrow) ---------- */
+.tabs{display:flex;gap:8px;margin:22px 0 18px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:.4rem 1rem;font-weight:500;transition:border-color .15s,background .15s,color .15s}
+.chip:hover{border-color:var(--line-hover)}
+.chip[aria-pressed=true]{background:var(--night);color:#fff;border-color:var(--night)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip[aria-pressed=true]{background:var(--sun);color:var(--night);border-color:var(--sun)}}
+:root[data-theme="dark"] .chip[aria-pressed=true]{background:var(--sun);color:var(--night);border-color:var(--sun)}
+
+/* ---------- Stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.stat{position:relative;background:var(--card);border-radius:1.1rem;padding:16px 18px;box-shadow:var(--soft-shadow)}
+.stat:before{content:"";position:absolute;top:18px;right:18px;width:6px;height:6px;border-radius:50%;background:var(--sun)}
+.stat b{display:block;font:800 1.65rem "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.03em}.stat small{color:var(--mute)}
+
+/* ---------- Itinerary board ---------- */
+.board{display:flex;gap:16px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
+.col{flex:0 0 270px;background:color-mix(in srgb,var(--card) 55%,transparent);border:1.5px solid var(--line);border-radius:1.1rem;padding:12px}
+.col>h3{font-size:18px;display:flex;justify-content:space-between;align-items:baseline;padding:2px 4px 10px}
+.col>h3 small{font:500 13px "Instrument Sans",system-ui,sans-serif;color:var(--mute);letter-spacing:0}
+.act{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:.8rem;padding:10px 12px;margin-bottom:10px;box-shadow:0 6px 14px -12px rgba(12,34,51,.35)}
+.act b{display:block;font-weight:600}.act small{color:var(--mute)}
+.act .bt{display:flex;gap:4px;margin-top:8px;align-items:center}
+.act .bt span{margin-right:auto;font-weight:600}
+.ib{background:none;border:1px solid var(--line);border-radius:8px;width:30px;height:30px;line-height:1;color:var(--mute);transition:border-color .15s,color .15s}
+.ib:hover{border-color:var(--line-hover);color:var(--ink)}
+.ib[aria-pressed=true]{color:var(--pink);border-color:var(--pink)}
+.addact{width:100%;background:none;border:1.5px dashed var(--line);border-radius:.8rem;padding:8px;color:var(--mute);transition:border-color .15s,color .15s}
+.addact:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- Destinations ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.dest{background:var(--card);border-radius:1.1rem;overflow:hidden;box-shadow:var(--soft-shadow)}
+.dest .im{height:90px;padding:12px;display:flex;justify-content:space-between;color:#fff;font:700 18px "Bricolage Grotesque",system-ui,sans-serif;align-items:flex-start}
+.dest .im .ib{background:rgba(255,255,255,.9)}
+.dest div:last-child{padding:10px 14px;font-size:14px;color:var(--mute)}
+
+/* ---------- Budget ---------- */
+.panel{background:var(--card);border-radius:1.5rem;padding:24px;box-shadow:var(--card-shadow)}
+.cat{display:grid;grid-template-columns:110px 1fr 90px;gap:12px;align-items:center;margin:12px 0;font-size:15px}
+.cat .meter{margin:0;height:12px}.cat span:last-child{text-align:right;font-weight:600}
+.sect{margin:26px 0 12px;font-size:22px}
+.empty{padding:30px;border:2px dashed var(--line);border-radius:1.1rem;text-align:center;color:var(--mute)}
+
+/* ---------- Dialogs (boarding-pass card like .auth-card) ---------- */
+dialog{border:0;border-radius:1.5rem;padding:0;background:var(--card);color:var(--ink);width:min(440px,94vw);box-shadow:var(--card-shadow)}
+dialog::backdrop{background:rgba(12,34,51,.65);backdrop-filter:blur(3px)}
+.dlg{position:relative;padding:3.25rem 2rem 1.75rem;display:grid;gap:14px}
+.dlg:before{content:"";position:absolute;top:0;left:0;right:0;height:2rem;pointer-events:none;background:
+  radial-gradient(circle,var(--accent) 0 4px,transparent 4.5px) 1.5rem calc(100% - 4px)/8px 8px no-repeat,
+  radial-gradient(circle,var(--sun) 0 4px,transparent 4.5px) calc(100% - 1.5rem) calc(100% - 4px)/8px 8px no-repeat,
+  repeating-linear-gradient(90deg,var(--line) 0 6px,transparent 6px 12px) 2.25rem calc(100% - 1px)/calc(100% - 4.5rem) 2px no-repeat}
+.dlg:after{content:"\2708\FE0E";position:absolute;top:2rem;left:50%;transform:translate(-50%,-50%);padding:0 .6rem;background:var(--card);color:var(--accent);font-size:1.1rem;line-height:1}
+.dlg h3{font-size:1.6rem;font-weight:700;line-height:1.1}
+
+/* ---------- Form fields (match auth inputs) ---------- */
+label{display:grid;gap:.45rem;font-size:.9rem;font-weight:600;color:var(--ink)}
+input,select{font:inherit;font-weight:400;background:var(--field);color:var(--ink);border:1.5px solid var(--line);border-radius:.8rem;padding:.75rem 1rem;width:100%;transition:border-color .15s,box-shadow .15s,background .15s}
+input:hover,select:hover{border-color:var(--line-hover)}
+input:focus,select:focus{outline:none;border-color:var(--accent);background:var(--field-focus);box-shadow:0 0 0 4px var(--ring)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end}
+.dlg .actions{margin-top:6px;padding-top:16px;border-top:2px dashed var(--line)}
+
+/* ---------- Legacy auth overlay (kept) ---------- */
+.auth{position:fixed;inset:0;z-index:10;background:var(--hero);display:grid;place-items:center;padding:20px}
+.auth .card{background:var(--card);border-radius:22px;padding:30px;width:min(400px,100%);display:grid;gap:14px}
+.auth .logo{color:var(--ink)}
+.auth .tg{display:flex;gap:6px}.auth .tg button{flex:1}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--night);color:#fff;padding:.7rem 1.2rem;border-radius:999px;font-size:14px;font-weight:500;z-index:20;box-shadow:0 12px 24px -12px rgba(12,34,51,.6)}
+.toast:before{content:"";display:inline-block;width:6px;height:6px;margin-right:.5rem;border-radius:50%;background:var(--sun);vertical-align:middle}
+[hidden]{display:none!important}
+@media (max-width:640px){.top h2{font-size:28px}.col{flex-basis:84vw}.cat{grid-template-columns:80px 1fr 70px}.dlg{padding:3.25rem 1.4rem 1.5rem}}
+@media (prefers-reduced-motion:reduce){.ticket,.btn,.chip,input,select{transition:none}}
+
+/* ---------- Header links ---------- */
+header a{color:rgba(234,244,243,.78);text-decoration:none;padding:8px 14px;border-radius:999px;transition:color .15s,background .15s}
+header a:hover{color:#fff}
+header a[aria-current=page]{background:rgba(12,34,51,.35);color:var(--glass);font-weight:600;box-shadow:inset 0 0 0 1px rgba(143,224,208,.35)}
+header .logo{color:#fff;padding:0}
+header .logo:hover{color:#fff}
+#favorites-count:not(:empty){display:inline-grid;place-items:center;min-width:1.4em;height:1.4em;padding:0 .35em;margin-left:.2rem;border-radius:999px;background:var(--sun);color:var(--night);font-size:.75rem;font-weight:600}
+a.ticket{text-decoration:none;color:inherit}
+.error{color:var(--pink);font-size:14px;margin:0}
+.auth{position:static;min-height:100vh}
+
+/* ---- Login y registro (legacy; the auth pages now use styles.css) ---- */
+.auth-body{min-height:100vh}
+.auth-layout{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh}
+.auth-intro{background:var(--hero);color:#fff;padding:clamp(24px,5vw,56px);display:flex;flex-direction:column;justify-content:space-between;gap:40px}
+.auth-intro h1{font-size:clamp(34px,5vw,58px);font-weight:800;line-height:1.05;margin:10px 0 16px}
+.auth-intro p:not(.eyebrow){max-width:420px;color:rgba(234,244,243,.78);margin:0}
+.auth-intro .eyebrow{color:var(--sun)}
+.brand{font:800 26px "Bricolage Grotesque",sans-serif;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand i{width:.85rem;height:.85rem;border-radius:50%;background:var(--sun);display:block}
+.brand span{color:var(--glass)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--mute);margin:0}
+.auth-panel{display:grid;place-items:center;padding:24px;background:var(--bg)}
+.auth-card{background:var(--card);border-radius:22px;padding:32px;width:min(420px,100%);box-shadow:var(--card-shadow)}
+.auth-card h2{font-size:28px;font-weight:800;margin:6px 0 4px}
+.auth-copy{color:var(--mute);margin:0 0 18px}
+.auth-card form{display:grid;gap:14px}
+.auth-submit{background:var(--night);color:#fff;border:0;border-radius:.8rem;padding:12px 18px;font-weight:600}
+.auth-submit:disabled{opacity:.6;cursor:wait}
+.auth-switch{margin:18px 0 0;font-size:14px;color:var(--mute)}
+.auth-switch a{color:var(--accent);font-weight:600}
+small.hint{font-weight:400;color:var(--mute)}
+@media (max-width:760px){.auth-layout{grid-template-columns:1fr}.auth-intro{gap:20px;padding-bottom:32px}}
