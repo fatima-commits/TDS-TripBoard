@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Favoritos · TripBoard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="./css/stylesTrips.css">
+</head>
+<body>
+<header>
+  <a class="logo" href="trips.html"><i></i>TripBoard</a>
+  <nav aria-label="Principal">
+    <a id="nav-trips" href="trips.html">Mis viajes</a>
+    <a id="nav-favorites" href="favorites.html" aria-current="page">Favoritos <span id="favorites-count"></span></a>
+  </nav>
+  <span id="user-name"></span>
+  <button class="btn ghost" id="btn-logout">Cerrar sesión</button>
+</header>
+<main>
+  <div class="top">
+    <div><h2 id="favorites-title">Favoritos</h2><p id="favorites-subtitle">Lo que no quieres perderte.</p></div>
+  </div>
+
+  <section class="fav-section" aria-labelledby="favorite-destinations-title">
+    <h3 class="sect" id="favorite-destinations-title">Destinos <small id="favorite-destinations-count"></small></h3>
+    <div class="empty" id="favorite-destinations-empty" hidden>Marca un destino con ♥ y aparecerá aquí.</div>
+    <div class="grid" id="favorite-destinations-list"></div>
+  </section>
+
+  <section class="fav-section" aria-labelledby="favorite-activities-title">
+    <h3 class="sect" id="favorite-activities-title">Actividades <small id="favorite-activities-count"></small></h3>
+    <div class="empty" id="favorite-activities-empty" hidden>Marca una actividad con ♥ y aparecerá aquí.</div>
+    <div class="grid" id="favorite-activities-list"></div>
+  </section>
+
+  <!--
+    Plantillas para favorites.js (mismas clases que trip.html):
+
+    Destino → dentro de #favorite-destinations-list
+      <a class="dest" href="trip.html?id=TRIP_ID">
+        <div class="im" style="background:GRADIENTE">Nombre del destino
+          <button class="ib" aria-pressed="true" aria-label="Quitar de favoritos">♥</button>
+        </div>
+        <div>Nombre del viaje</div>
+      </a>
+
+    Actividad → dentro de #favorite-activities-list
+      <a class="act" href="trip.html?id=TRIP_ID" style="--c:COLOR_CATEGORIA">
+        <small>Nombre del viaje · Categoría</small>
+        <b>Título de la actividad</b>
+        <div class="bt"><span>$25</span>
+          <button class="ib" aria-pressed="true" aria-label="Quitar de favoritos">♥</button>
+        </div>
+      </a>
+  -->
+</main>
+<div class="toast" id="toast" hidden></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/favorites.js"></script>
+</body>
+</html>
