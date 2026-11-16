@@ -3,11 +3,11 @@
 // y el que ya usan trip.js / trips.js / ui.js (activities planas, favorite, ...).
 
 // Cambia esto si tu API vive en otro origen, p. ej. "http://localhost:3000/api"
-const API_URL = "http://localhost:3000/api";
+const API_URL = location.origin + "/api";
 
 // Mientras depuras: no redirige al login en un 401 y muestra el estado HTTP en el aviso.
 // Ponlo en false cuando todo funcione.
-const DEBUG = true;
+const DEBUG = false;
 
 class ApiError extends Error {
   constructor(status, message, code) {

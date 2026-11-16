@@ -19,7 +19,7 @@ function required(name: string): string {
 export const env = {
   port: Number(process.env.PORT ?? 3000),
   nodeEnv: process.env.NODE_ENV ?? 'development',
-  mongoUri: required('MONGO_URI'),
+  mongoUri: required('mongodb+srv://tripboard_admin:bibi2468@tripboard.zzwwhnd.mongodb.net/'),
   accessSecret: required('JWT_ACCESS_SECRET'),
   refreshSecret: required('JWT_REFRESH_SECRET'),
   accessTokenTtl: process.env.ACCESS_TOKEN_TTL ?? '15m',
