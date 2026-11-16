@@ -6,7 +6,7 @@ async function loadTrips() {
   $("#trips-list").innerHTML = trips.map(t => {
     const pct = Math.min(100, t.budget ? t.spent / t.budget * 100 : 0);
     return `<a class="ticket" id="trip-card-${t._id}" data-id="${t._id}" href="trip.html?id=${t._id}">
-      <div class="tk-top" style="background:${gradient(t._id)}"><h3>${esc(t.name)}</h3><span>${esc(t.destination)}</span></div>
+      <div class="tk-top" style="background:${esc(coverBackground(t.cover, gradient(t._id)))}"><h3>${esc(t.name)}</h3><span>${esc(t.destination)}</span></div>
       <div class="tk-mid"><div class="row2"><span>${t.days} días</span><span>${t.activityCount} actividades</span></div>
         <div class="meter ${t.spent > t.budget ? "over" : ""}"><i style="width:${pct}%"></i></div>
         <div class="row2"><span>Gastado ${money(t.spent)}</span><span>de ${money(t.budget)}</span></div></div></a>`;

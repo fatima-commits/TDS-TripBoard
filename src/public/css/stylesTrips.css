@@ -64,6 +64,10 @@ main{padding:32px clamp(16px,4vw,40px) 64px;max-width:1280px;margin:0 auto}
 .tk-top{height:130px;padding:18px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;position:relative}
 .tk-top h3{font-size:1.65rem;font-weight:800;letter-spacing:-.03em}.tk-top span{font-size:14px;opacity:.9}
 .tk-top:after{content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.16)}
+.trip-cover{height:clamp(160px,26vw,240px);border-radius:1.5rem;margin-bottom:20px;display:flex;align-items:flex-end;justify-content:flex-end;padding:14px;box-shadow:var(--card-shadow);background:var(--hero)}
+.cover-actions{display:flex;gap:8px;flex-wrap:wrap}
+.cover-btn{background:rgba(12,34,51,.55);backdrop-filter:blur(4px);padding:.55rem 1rem;font-size:.9rem}
+.cover-btn:disabled{opacity:.6;cursor:progress}
 .tk-mid{border-top:2px dashed var(--line);margin:0 -1px;position:relative;padding:16px 18px 18px}
 .tk-mid:before,.tk-mid:after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg)}
 .tk-mid:before{left:-10px}.tk-mid:after{right:-10px}
@@ -87,6 +91,22 @@ main{padding:32px clamp(16px,4vw,40px) 64px;max-width:1280px;margin:0 auto}
 .stat{position:relative;background:var(--card);border-radius:1.1rem;padding:16px 18px;box-shadow:var(--soft-shadow)}
 .stat:before{content:"";position:absolute;top:18px;right:18px;width:6px;height:6px;border-radius:50%;background:var(--sun)}
 .stat b{display:block;font:800 1.65rem "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.03em}.stat small{color:var(--mute)}
+
+/* ---------- Weather ---------- */
+.weather{margin-top:14px;background:var(--card);border-radius:1.1rem;padding:16px 18px;box-shadow:var(--soft-shadow);display:grid;gap:14px}
+.weather-now{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.weather-icon{font-size:2.4rem;line-height:1}
+.weather-now>div{display:grid}
+.weather-temp{font:800 1.9rem "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.03em;line-height:1.1}
+.weather-place{margin-left:auto;color:var(--mute);text-align:right}
+.weather-days{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(64px,1fr));gap:8px;overflow-x:auto}
+.weather-days li{display:grid;justify-items:center;gap:2px;padding:8px 4px;border:1.5px solid var(--line);border-radius:.8rem;text-align:center}
+.weather-days li small{color:var(--mute);font-size:.8rem}
+.weather-days li span{font-size:1.3rem}
+.weather-notice{display:flex;align-items:center;gap:10px;color:var(--mute)}
+.weather-notice p,.weather-loading{margin:0;color:var(--mute)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:560px){.weather-place{margin-left:0;text-align:left}}
 
 /* ---------- Itinerary board ---------- */
 .board{display:flex;gap:16px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}

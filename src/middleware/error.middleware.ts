@@ -14,8 +14,10 @@ export const errorHandler: ErrorRequestHandler = (error: unknown, _request, resp
 
   if (error instanceof multer.MulterError) {
     const message = error.code === 'LIMIT_FILE_SIZE'
-      ? 'Evidence image must be 2 MB or smaller'
-      : 'Could not upload evidence image';
+      ? 'Image must be 2 MB or smaller'
+      : error.code === 'LIMIT_UNEXPECTED_FILE'
+        ? `Unexpected file field "${error.field}"`
+        : 'Could not upload image';
     response.status(400).json({ error: { code: 'UPLOAD_ERROR', message } });
     return;
   }

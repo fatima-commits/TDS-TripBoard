@@ -2,6 +2,7 @@ import type { Request, RequestHandler } from 'express';
 import { isValidObjectId } from 'mongoose';
 import { Trip } from '../models/trip.model.js';
 import { AppError } from '../utils/app-error.js';
+import { deleteCoverFile, removeTripCover, setTripCover } from '../services/trip-cover.service.js';
 
 function currentUserId(request: Request): string {
   if (!request.auth) {
@@ -137,10 +138,28 @@ export const deleteTrip: RequestHandler = async (request, response) => {
   const trip = await findOwnedTrip(request);
 
   // Soft delete, same convention as the catalog.
+  // The cover file is removed from disk so deleted trips leave no garbage behind.
+  const previousCoverUrl = trip.coverUrl;
   trip.isActive = false;
+  trip.coverUrl = '';
   await trip.save();
+  await deleteCoverFile(previousCoverUrl);
 
   response.status(204).end();
+};
+
+// ---------------------------------------------------------------------------
+// Portada
+// ---------------------------------------------------------------------------
+
+export const updateTripCover: RequestHandler = async (request, response) => {
+  const trip = await setTripCover(currentUserId(request), request.params.id, request.file);
+  response.json({ trip });
+};
+
+export const deleteTripCover: RequestHandler = async (request, response) => {
+  const trip = await removeTripCover(currentUserId(request), request.params.id);
+  response.json({ trip });
 };
 
 // ---------------------------------------------------------------------------

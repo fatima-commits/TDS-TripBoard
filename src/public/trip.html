@@ -19,6 +19,13 @@
 </header>
 <main>
   <a class="back" id="btn-back" href="trips.html" style="display:inline-block;color:var(--mute);text-decoration:none">‹ Todos los viajes</a>
+  <div class="trip-cover" id="trip-cover">
+    <div class="cover-actions">
+      <input type="file" id="cover-input" accept="image/jpeg,image/png,image/gif,image/webp" hidden>
+      <button class="btn cover-btn" id="btn-change-cover" type="button">Cambiar portada</button>
+      <button class="btn cover-btn" id="btn-remove-cover" type="button" hidden>Quitar portada</button>
+    </div>
+  </div>
   <div class="top">
     <div><h2 id="trip-name">Cargando…</h2><p id="trip-meta"></p></div>
     <div class="actions">
@@ -32,9 +39,10 @@
     <div class="stat"><b id="stat-left"></b><small id="stat-left-label">Disponible</small></div>
     <div class="stat"><b id="stat-activities"></b><small>Actividades</small></div>
   </div>
+  <section class="weather" id="trip-weather" aria-label="Clima del destino" aria-live="polite"></section>
   <div class="tabs" role="group" aria-label="Secciones">
     <button class="chip" id="tab-itinerary" aria-pressed="true">Itinerario</button>
-    <button class="chip" id="tab-destinations" aria-pressed="false">Destinos</button>
+    <button class="chip" id="tab-destinations" aria-pressed="false" >Destinos</button>
     <button class="chip" id="tab-budget" aria-pressed="false">Presupuesto</button>
   </div>
   <section id="panel-itinerary"><div class="board" id="days-board"></div></section>
@@ -70,5 +78,6 @@
 <script src="js/trip-favorite.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/trip.js"></script>
+<script src="js/trip-weather.js"></script>
 </body>
 </html>

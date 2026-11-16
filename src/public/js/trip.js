@@ -11,6 +11,8 @@ async function loadTrip() {
 }
 function render() {
   const spent = trip.activities.reduce((s, a) => s + a.cost, 0), left = trip.budget - spent;
+  $("#trip-cover").style.background = coverBackground(trip.cover, gradient(trip._id));
+  $("#btn-remove-cover").hidden = !trip.cover;
   $("#trip-name").textContent = trip.name;
   $("#trip-meta").textContent = `${trip.destination} · ${trip.days} días`;
   $("#stat-budget").textContent = money(trip.budget);
@@ -65,6 +67,32 @@ document.addEventListener("click", async e => {
 $("#btn-delete-trip").onclick = async () => {
   if (!confirm("¿Eliminar este viaje y todas sus actividades?")) return;
   try { await api.deleteTrip(tripId); location.href = "trips.html"; } catch (err) { toast(err.message); }
+};
+// --- Portada ---------------------------------------------------------------
+function setCoverBusy(busy) {
+  $("#btn-change-cover").disabled = busy;
+  $("#btn-remove-cover").disabled = busy;
+  $("#btn-change-cover").textContent = busy ? "Subiendo…" : "Cambiar portada";
+}
+$("#btn-change-cover").onclick = () => $("#cover-input").click();
+$("#cover-input").onchange = async e => {
+  const file = e.target.files[0];
+  e.target.value = ""; // permite volver a elegir el mismo archivo
+  if (!file) return;
+  // Aviso rápido; la validación real la hace el servidor.
+  if (!COVER_TYPES.includes(file.type)) { toast("Formato no permitido: usa JPG, PNG, GIF o WebP"); return; }
+  if (file.size > COVER_MAX_BYTES) { toast("La imagen debe pesar 2 MB o menos"); return; }
+  setCoverBusy(true);
+  try { trip = await api.setTripCover(tripId, file); render(); toast("Portada actualizada"); }
+  catch (err) { toast(err.message); }
+  finally { setCoverBusy(false); }
+};
+$("#btn-remove-cover").onclick = async () => {
+  if (!confirm("¿Quitar la portada de este viaje?")) return;
+  setCoverBusy(true);
+  try { trip = await api.removeTripCover(tripId); render(); toast("Portada eliminada"); }
+  catch (err) { toast(err.message); }
+  finally { setCoverBusy(false); }
 };
 $("#btn-add-destination").onclick = () => $("#dialog-destination").showModal();
 $("#destination-form").onsubmit = async e => {

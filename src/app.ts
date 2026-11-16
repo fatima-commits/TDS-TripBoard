@@ -8,6 +8,7 @@ import { errorHandler, notFound } from './middleware/error.middleware.js';
 import { healthRouter } from './routes/health.routes.js';
 import { tripRoutes } from './routes/trips.routes.js';
 import { favoriteRouter } from './routes/favorites.routes.js';
+import { coversDirectory, coversPublicPath } from './config/uploads.js';
 
 const publicFolder = process.env.NODE_ENV === 'production' ? 'dist/public' : 'src/public';
 const publicDirectory = path.join(process.cwd(), publicFolder);
@@ -28,6 +29,17 @@ app.get('/', (_request, response) => response.sendFile(path.join(publicDirectory
 app.get('/login', (_request, response) => response.sendFile(path.join(publicDirectory, 'login.html')));
 app.get('/register', (_request, response) => response.sendFile(path.join(publicDirectory, 'register.html')));
 app.use(express.static(publicDirectory));
+
+// Portadas subidas por los usuarios. CORP cross-origin para que el front pueda
+// mostrarlas aunque se abra desde otro origen (p. ej. Live Server).
+app.use(
+  coversPublicPath,
+  (_request, response, next) => {
+    response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  },
+  express.static(coversDirectory, { dotfiles: 'deny', index: false, fallthrough: true })
+);
 
 app.use(notFound);
 app.use(errorHandler);

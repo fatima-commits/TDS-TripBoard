@@ -76,7 +76,7 @@
     const percent = trip.budget > 0 ? Math.min(100, (trip.spent / trip.budget) * 100) : 0;
 
     return el("article", { className: "ticket fav-card" }, [
-      el("div", { className: "tk-top", style: `background:${gradientFor(trip.gradient)}` }, [
+      el("div", { className: "tk-top", style: `background:${coverBackground(trip.cover, gradientFor(trip.gradient))}` }, [
         heartButton(`Quitar ${trip.name} de favoritos`, () => removeTrip(trip)),
         el("h3", {}, el("a", { className: "stretch", href: tripUrl(trip._id), textContent: trip.name })),
         el("span", { textContent: trip.destination || "Destino por definir" })

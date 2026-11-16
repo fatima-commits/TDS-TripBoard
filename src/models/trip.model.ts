@@ -46,6 +46,8 @@ const tripSchema = new Schema(
     country: { type: String, trim: true, maxlength: 80, default: '' },   // quitar required
     price: { type: Number, min: 0, default: 0 },                         // quitar required
     imageUrl: { type: String, trim: true, default: '' },
+    // Portada subida por el dueño: "/uploads/covers/<uuid>.<ext>" o '' si no tiene.
+    coverUrl: { type: String, trim: true, default: '' },
     // Inactive trips stay in the database but are hidden from the catalog.
     isActive: { type: Boolean, default: true }
   },

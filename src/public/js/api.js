@@ -10,9 +10,10 @@ const API_URL = "http://localhost:3000/api";
 const DEBUG = true;
 
 class ApiError extends Error {
-  constructor(status, message) {
+  constructor(status, message, code) {
     super(message);
     this.status = status;
+    this.code = code; // código del backend, p. ej. "WEATHER_UNAVAILABLE"
   }
 }
 
@@ -32,11 +33,14 @@ const Session = {
 // Petición base
 // ---------------------------------------------------------------------------
 async function request(path, { method = "GET", body, redirectOn401 = true } = {}) {
+  // FormData (subida de archivos) se envía tal cual: el navegador pone el
+  // Content-Type multipart/form-data con su boundary.
+  const isJson = body !== undefined && !(body instanceof FormData);
   const response = await fetch(API_URL + path, {
     method,
     credentials: "include", // envía la cookie de sesión
-    headers: body ? { "Content-Type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined
+    headers: isJson ? { "Content-Type": "application/json" } : undefined,
+    body: isJson ? JSON.stringify(body) : body
   });
 
   if (response.status === 401 && redirectOn401 && !DEBUG) {
@@ -50,10 +54,26 @@ async function request(path, { method = "GET", body, redirectOn401 = true } = {}
   if (!response.ok) {
     const message = data?.error?.message ?? data?.message ?? "Algo salió mal";
     console.error(`[API] ${method} ${path} → ${response.status}`, data);
-    throw new ApiError(response.status, DEBUG ? `[${response.status}] ${message}` : message);
+    throw new ApiError(response.status, DEBUG ? `[${response.status}] ${message}` : message, data?.error?.code);
   }
   return data;
 }
+
+// ---------------------------------------------------------------------------
+// Portadas
+// ---------------------------------------------------------------------------
+const COVER_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const COVER_MAX_BYTES = 2 * 1024 * 1024;
+
+// El backend guarda una ruta relativa (/uploads/covers/<uuid>.jpg); se resuelve
+// contra el origen de la API por si el front se abre desde otro origen.
+const coverSrc = coverUrl => (coverUrl ? new URL(coverUrl, API_URL).href : "");
+
+// Fondo CSS de una tarjeta: la portada (con velo para que el texto se lea)
+// o, si no hay, el degradado de siempre.
+const coverBackground = (cover, fallback) => cover
+  ? `linear-gradient(180deg,rgba(12,34,51,.05) 30%,rgba(12,34,51,.7)),url('${encodeURI(cover)}') center/cover no-repeat`
+  : fallback;
 
 // ---------------------------------------------------------------------------
 // Adaptador: backend -> formato del front
@@ -77,6 +97,7 @@ function normalizeTrip(t) {
     // El backend guarda city y country por separado.
     destination: [t.city, t.country].filter(Boolean).join(", "),
     gradient: t.gradient ?? 0,
+    cover: coverSrc(t.coverUrl),
     budget: t.budget,
     days: t.days.length,
     activities,
@@ -125,6 +146,25 @@ const api = {
   },
 
   deleteTrip: id => request(`/trips/${id}`, { method: "DELETE" }),
+
+  // --- Clima (siempre vía backend, nunca directo a Open-Meteo) --------------
+  async getTripWeather(id) {
+    const { weather } = await request(`/trips/${id}/weather`);
+    return weather;
+  },
+
+  // --- Portada -------------------------------------------------------------
+  async setTripCover(id, file) {
+    const form = new FormData();
+    form.append("cover", file);
+    const { trip } = await request(`/trips/${id}/cover`, { method: "PUT", body: form });
+    return normalizeTrip(trip);
+  },
+
+  async removeTripCover(id) {
+    const { trip } = await request(`/trips/${id}/cover`, { method: "DELETE" });
+    return normalizeTrip(trip);
+  },
 
   // --- Actividades ---------------------------------------------------------
   // `day` llega desde el front en base 1; el backend usa índice desde 0.
