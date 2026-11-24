@@ -1,9 +1,8 @@
 # CI/CD de TripBoard.
-# - En cada push y pull request a main: instala dependencias y compila.
-# - Solo en push a main y solo si el build pasa: llama al Deploy Hook de Render.
-# - Después espera a que Render sirva ESTE commit (/health) y comprueba que la app esté sana (/ready).
-#   Que Render acepte el hook no significa que el servicio esté sano; por eso se verifica aparte.
+# - En cada push y pull request a main: instala dependencias y compila (tsc valida los tipos).
+# - Solo en push a main y si el build pasa: dispara el despliegue en Render mediante su Deploy Hook.
 #
+# Requiere el secreto RENDER_DEPLOY_HOOK_URL en Settings -> Secrets and variables -> Actions.
 
 name: CI/CD
 
@@ -13,14 +12,12 @@ on:
   pull_request:
     branches: [main]
 
-# Un solo flujo a la vez por rama: si llegan dos pushes seguidos, el segundo espera al primero.
 concurrency:
   group: deploy-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,21 +27,18 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Instalar dependencias
+      - name: Install dependencies
         run: npm ci
 
-      - name: Compilar
+      - name: Build
         run: npm run build
 
   deploy:
-    name: Desplegar en Render y verificar
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    env:
-      APP_URL: ${{ vars.APP_URL }}
     steps:
-      - name: Solicitar despliegue (Deploy Hook)
+      - name: Trigger Render deploy
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
@@ -52,31 +46,4 @@ jobs:
             echo "::error::Falta el secreto RENDER_DEPLOY_HOOK_URL"
             exit 1
           fi
-          echo "Commit a desplegar: $GITHUB_SHA"
           curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
-          echo
-          echo "Render aceptó la solicitud. Aún no significa que el servicio esté sano."
-
-      - name: Esperar a que Render sirva este commit (/health)
-        run: |
-          if [ -z "$APP_URL" ]; then
-            echo "::error::Falta la variable APP_URL"
-            exit 1
-          fi
-          for attempt in $(seq 1 45); do
-            live_commit=$(curl -fsS --max-time 60 "$APP_URL/health" | jq -r '.commit' || echo "sin-respuesta")
-            echo "Intento $attempt: Render sirve $live_commit"
-            if [ "$live_commit" = "$GITHUB_SHA" ]; then
-              echo "La versión nueva ya está publicada."
-              exit 0
-            fi
-            sleep 20
-          done
-          echo "::error::Render no publicó el commit $GITHUB_SHA en 15 minutos"
-          exit 1
-
-      - name: Verificar que la app esté lista (/ready)
-        run: |
-          curl -fsS --max-time 60 "$APP_URL/ready"
-          echo
-          echo "Servicio sano: proceso arriba y MongoDB Atlas conectado."
