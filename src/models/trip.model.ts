@@ -1,6 +1,8 @@
 import { model, Schema, type InferSchemaType } from 'mongoose';
 
-const CATEGORIES = ['Comida', 'Cultura', 'Transporte', 'Hospedaje', 'Aventura'] as const;
+export const CATEGORIES = ['Comida', 'Cultura', 'Transporte', 'Hospedaje', 'Aventura'] as const;
+export const MIN_DAYS = 1;
+export const MAX_DAYS = 14;
 
 const activitySchema = new Schema({
   title: { type: String, required: true, trim: true, maxlength: 120 },
@@ -42,13 +44,10 @@ const tripSchema = new Schema(
     destinations: { type: [destinationSchema], default: [] },
     days: { type: [daySchema], default: [] },
 
-    // relajar: el formulario del front no los pide
-    country: { type: String, trim: true, maxlength: 80, default: '' },   // quitar required
-    price: { type: Number, min: 0, default: 0 },                         // quitar required
-    imageUrl: { type: String, trim: true, default: '' },
+    country: { type: String, trim: true, maxlength: 80, default: '' },
     // Portada subida por el dueño: "/uploads/covers/<uuid>.<ext>" o '' si no tiene.
     coverUrl: { type: String, trim: true, default: '' },
-    // Inactive trips stay in the database but are hidden from the catalog.
+    // Los viajes eliminados quedan en la base con isActive = false (borrado lógico).
     isActive: { type: Boolean, default: true }
   },
   { timestamps: true }
@@ -61,14 +60,27 @@ tripSchema.pre('validate', function () {
 tripSchema.virtual('destination').get(function () {
   return [this.city, this.country].filter(Boolean).join(', ');
 });
+
+// Presupuesto calculado en el backend a partir de days[].activities.
+// Son virtuales: no se guardan en MongoDB, así que nunca quedan desfasados.
+tripSchema.virtual('spent').get(function () {
+  return this.days.reduce(
+    (total, day) => total + day.activities.reduce((sum, activity) => sum + (activity.cost ?? 0), 0),
+    0
+  );
+});
+
+tripSchema.virtual('activityCount').get(function () {
+  return this.days.reduce((total, day) => total + day.activities.length, 0);
+});
+
 tripSchema.set('toJSON', { virtuals: true });
 
 tripSchema.index({ user: 1, isActive: 1, createdAt: -1 });
 
-// Indexes that match the sorts and filters used by the catalog.
+// Índices para los filtros y ordenamientos de GET /api/trips.
 tripSchema.index({ isActive: 1, name: 1 });
 tripSchema.index({ isActive: 1, country: 1, name: 1 });
-tripSchema.index({ isActive: 1, price: 1, name: 1 });
 
 export type TripDocument = InferSchemaType<typeof tripSchema>;
 export const Trip = model('Trip', tripSchema);

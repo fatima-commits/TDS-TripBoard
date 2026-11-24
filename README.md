@@ -69,3 +69,11 @@ Página Favoritos
 Trabajé capa por capa y comprobé cada una antes de pasar a la siguiente: primero la API (Network y respuestas JSON), después las Views y al final los estilos.
 
 ---
+---
+
+## CI/CD
+
+`.github/workflows/deploy.yml` corre en cada push y pull request a `main`: `npm ci` → `npm run build`. Solo en push a `main` y si todo pasa, llama al Deploy Hook de Render, espera a que `/health` reporte el commit nuevo y comprueba `/ready`.
+
+Configuración necesaria en GitHub: el secreto `RENDER_DEPLOY_HOOK_URL` y la variable `APP_URL`. En Render, Auto-Deploy debe estar desactivado.
+

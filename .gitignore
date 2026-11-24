@@ -9,6 +9,4 @@ docs/requerimientos-v1.md
 .env
 coverage/
 uploads/*
-!uploads/reports/
-uploads/reports/*
-!uploads/reports/.gitkeep
+

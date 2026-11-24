@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler, RequestHandler } from 'express';
+import mongoose from 'mongoose';
 import multer from 'multer';
 import { AppError } from '../utils/app-error.js';
 
@@ -19,6 +20,21 @@ export const errorHandler: ErrorRequestHandler = (error: unknown, _request, resp
         ? `Unexpected file field "${error.field}"`
         : 'Could not upload image';
     response.status(400).json({ error: { code: 'UPLOAD_ERROR', message } });
+    return;
+  }
+
+  // Red de seguridad: si una regla del esquema de Mongoose rechaza el dato,
+  // es un error de entrada (400), no un fallo del servidor (500).
+  if (error instanceof mongoose.Error.ValidationError) {
+    const fields = Object.keys(error.errors);
+    response.status(400).json({
+      error: { code: 'VALIDATION_ERROR', message: `Invalid value for: ${fields.join(', ')}`, fields }
+    });
+    return;
+  }
+
+  if (error instanceof mongoose.Error.CastError) {
+    response.status(400).json({ error: { code: 'INVALID_VALUE', message: `Invalid value for ${error.path}` } });
     return;
   }
 

@@ -10,7 +10,7 @@ async function loadTrip() {
   render();
 }
 function render() {
-  const spent = trip.activities.reduce((s, a) => s + a.cost, 0), left = trip.budget - spent;
+  const spent = trip.spent, left = trip.budget - spent;
   $("#trip-cover").style.background = coverBackground(trip.cover, gradient(trip._id));
   $("#btn-remove-cover").hidden = !trip.cover;
   $("#trip-name").textContent = trip.name;

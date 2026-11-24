@@ -3,6 +3,7 @@ import { isValidObjectId } from 'mongoose';
 import { Trip } from '../models/trip.model.js';
 import { AppError } from '../utils/app-error.js';
 import { deleteCoverFile, removeTripCover, setTripCover } from '../services/trip-cover.service.js';
+import { parseActivityInput, parseTripInput } from '../utils/validation.js';
 
 function currentUserId(request: Request): string {
   if (!request.auth) {
@@ -26,7 +27,6 @@ function escapeRegularExpression(value: string): string {
 const sortOptions: Record<string, string> = {
   name: 'name',
   country: 'country name',
-  price: 'price name',
   recent: '-createdAt'
 };
 
@@ -110,25 +110,17 @@ export const getTrip: RequestHandler = async (request, response) => {
 // ---------------------------------------------------------------------------
 
 export const createTrip: RequestHandler = async (request, response) => {
-  const { name, destination, days, budget } = request.body ?? {};
-
-  if (!String(name ?? '').trim()) {
-    throw new AppError(400, 'INVALID_TRIP_NAME', 'Trip name is required');
-  }
-
-  const [city, ...rest] = String(destination ?? '')
-    .split(',')
-    .map((part) => part.trim());
-  const dayCount = Math.max(1, Math.min(14, Number(days) || 1));
+  // Valida tipo, rango y formato antes de guardar (400 con código estable).
+  const { name, city, country, days, budget } = parseTripInput(request.body);
 
   const trip = await Trip.create({
     user: currentUserId(request),
     name,
-    city: city || 'Destino por definir',
-    country: rest.join(', '),
-    budget: Number(budget) || 0,
+    city,
+    country,
+    budget,
     gradient: Math.floor(Math.random() * 4),
-    days: Array.from({ length: dayCount }, () => ({ activities: [] }))
+    days: Array.from({ length: days }, () => ({ activities: [] }))
   });
 
   response.status(201).json({ trip });
@@ -137,7 +129,7 @@ export const createTrip: RequestHandler = async (request, response) => {
 export const deleteTrip: RequestHandler = async (request, response) => {
   const trip = await findOwnedTrip(request);
 
-  // Soft delete, same convention as the catalog.
+  // Borrado lógico: el viaje queda en MongoDB con isActive = false y deja de mostrarse.
   // The cover file is removed from disk so deleted trips leave no garbage behind.
   const previousCoverUrl = trip.coverUrl;
   trip.isActive = false;
@@ -174,8 +166,8 @@ export const addActivity: RequestHandler = async (request, response) => {
     throw new AppError(404, 'DAY_NOT_FOUND', 'Day was not found');
   }
 
-  const { title, time, category, cost } = request.body ?? {};
-  day.activities.push({ title, time, category, cost });
+  const activity = parseActivityInput(request.body);
+  day.activities.push(activity);
   await trip.save();
 
   response.status(201).json({ trip });
@@ -189,22 +181,31 @@ export const updateActivity: RequestHandler = async (request, response) => {
     trip,
     activityId
   );
-  const { isFavorite, day: targetIndex } = request.body ?? {};
+  const body = (request.body ?? {}) as { isFavorite?: unknown; day?: unknown };
+  const hasFavorite = body.isFavorite !== undefined;
+  const hasDay = body.day !== undefined;
 
-  if (typeof isFavorite === 'boolean') {
-    activity.isFavorite = isFavorite;
+  if (!hasFavorite && !hasDay) {
+    throw new AppError(400, 'INVALID_BODY', 'Send isFavorite (boolean) and/or day (index starting at 0)');
   }
 
-  if (Number.isInteger(targetIndex) && targetIndex !== dayIndex) {
-    const target = trip.days[targetIndex];
-
-    if (!target) {
-      throw new AppError(400, 'INVALID_DAY', 'Day is invalid');
+  if (hasFavorite) {
+    if (typeof body.isFavorite !== 'boolean') {
+      throw new AppError(400, 'INVALID_BODY', 'isFavorite must be a boolean');
     }
+    activity.isFavorite = body.isFavorite;
+  }
 
-    const data = activity.toObject();
-    day.activities.pull(activity._id);
-    target.activities.push(data);
+  if (hasDay) {
+    const targetIndex = body.day;
+    if (typeof targetIndex !== 'number' || !Number.isInteger(targetIndex) || !trip.days[targetIndex]) {
+      throw new AppError(400, 'INVALID_DAY', `day must be an index between 0 and ${trip.days.length - 1}`);
+    }
+    if (targetIndex !== dayIndex) {
+      const data = activity.toObject();
+      day.activities.pull(activity._id);
+      trip.days[targetIndex].activities.push(data);
+    }
   }
 
   await trip.save();

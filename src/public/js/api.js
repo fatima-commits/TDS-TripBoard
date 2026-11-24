@@ -1,12 +1,5 @@
-// js/api.js — Conexión del front con el backend de TripBoard.
-// Traduce entre el formato del backend (days[].activities, isFavorite, ...)
-// y el que ya usan trip.js / trips.js / ui.js (activities planas, favorite, ...).
-
-// Cambia esto si tu API vive en otro origen, p. ej. "http://localhost:3000/api"
 const API_URL = location.origin + "/api";
 
-// Mientras depuras: no redirige al login en un 401 y muestra el estado HTTP en el aviso.
-// Ponlo en false cuando todo funcione.
 const DEBUG = false;
 
 class ApiError extends Error {
@@ -17,9 +10,6 @@ class ApiError extends Error {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Sesión (ui.js usa Session.user). Si ya tienes la tuya, conserva esa.
-// ---------------------------------------------------------------------------
 const Session = {
   KEY: "tripboard:user",
   get user() {
@@ -102,8 +92,9 @@ function normalizeTrip(t) {
     days: t.days.length,
     activities,
     destinations: t.destinations.map(d => ({ _id: d._id, name: d.name, favorite: d.isFavorite })),
-    activityCount: activities.length,
-    spent: activities.reduce((sum, a) => sum + a.cost, 0)
+    // Totales calculados por el backend (virtuales del modelo Trip, no persistidos).
+    activityCount: t.activityCount,
+    spent: t.spent
   };
 }
 
